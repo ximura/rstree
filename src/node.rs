@@ -1,21 +1,42 @@
-#[warn(dead_code)]
-static DEFAULT_TOKEN:        &str = "├──";
-static LAST_ITEM_TOKEN:      &str = "└──";
+static DEFAULT_TOKEN: &str = "├──";
+static LAST_ITEM_TOKEN: &str = "└──";
 static INDENT_DEFAULT_TOKEN: &str = "│   ";
-static INDENT_LAST_TOKEN:    &str = "    ";
+static INDENT_LAST_TOKEN: &str = "    ";
 
+pub struct Tree {
+    root: Node,
+}
+
+impl Tree {
+    pub fn new() -> Self {
+        Tree {
+            root: Node::new("".to_string()),
+        }
+    }
+
+    pub fn println(&self) {
+        println!(".");
+        let l = self.root.child.len();
+        for i in 0..l {
+            self.root.child[i].println(i == l - 1, &Vec::new())
+        }
+    }
+
+    pub fn add(&mut self, name: String) -> &mut Node {
+        self.root.add(name)
+    }
+}
 
 pub struct Node {
-    name:  String,
+    name: String,
     child: Vec<Node>,
 }
 
 impl Node {
     pub fn new(name: String) -> Self {
-        let c = Vec::new();
         Node {
             name: name,
-            child: c
+            child: Vec::new(),
         }
     }
 
@@ -25,21 +46,32 @@ impl Node {
         self.child.last_mut().unwrap()
     }
 
-    pub fn println(&self) {
-        println!(".");
-        self._println(false, &mut Vec::new())
-    }
-
-    fn _println(&self, is_last: bool, indent: &mut Vec<bool>) {
-        for _ in indent.iter() {
-            print!("{}", if is_last {INDENT_LAST_TOKEN} else {INDENT_DEFAULT_TOKEN});    
+    fn println(&self, is_last: bool, indent: &[bool]) {
+        for last in indent.iter() {
+            print!(
+                "{}",
+                if *last {
+                    INDENT_LAST_TOKEN
+                } else {
+                    INDENT_DEFAULT_TOKEN
+                }
+            );
         }
-        
-        println!("{}{}", if is_last {LAST_ITEM_TOKEN} else {DEFAULT_TOKEN}, self.name);
-        indent.push(is_last);
+        println!(
+            "{}{}",
+            if is_last {
+                LAST_ITEM_TOKEN
+            } else {
+                DEFAULT_TOKEN
+            },
+            self.name
+        );
+
         let l = self.child.len();
+        let mut vec = indent.to_vec();
+        vec.push(is_last);
         for i in 0..l {
-            self.child[i]._println(i == l-1, indent)
+            self.child[i].println(i == l - 1, &vec)
         }
     }
 }
