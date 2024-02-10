@@ -28,8 +28,14 @@
 mod node;
 
 fn create_tree() -> node::Node {
-    let mut tree = node::Node::new("test_1".to_string());
-    tree.add("test_2".to_string());
+    let mut tree = node::Node::new("Cargo.lock".to_string());
+    tree.add("Cargo.lock".to_string());
+    tree.add("LICENSE".to_string());
+    tree.add("README.md".to_string());
+    let c = tree.add("src".to_string());
+    c.add("main.rs".to_string());
+    c.add("node.rs".to_string());
+
     tree
 }
 
