@@ -3,6 +3,7 @@ static LAST_ITEM_TOKEN: &str = "└──";
 static INDENT_DEFAULT_TOKEN: &str = "│   ";
 static INDENT_LAST_TOKEN: &str = "    ";
 
+#[derive(Debug)]
 pub struct Tree {
     root: Node,
 }
@@ -27,6 +28,7 @@ impl Tree {
     }
 }
 
+#[derive(Debug)]
 pub struct Node {
     name: String,
     child: Vec<Node>,
